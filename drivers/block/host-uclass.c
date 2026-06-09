@@ -27,6 +27,7 @@ DECLARE_GLOBAL_DATA_PTR;
  */
 struct host_priv {
 	struct udevice *cur_dev;
+	unsigned int flags;
 };
 
 int host_create_device(const char *label, bool removable, unsigned long blksz,
@@ -148,6 +149,23 @@ struct udevice *host_find_by_label(const char *label)
 	}
 
 	return NULL;
+}
+
+int host_set_flags_by_label(const char *label, unsigned int flags)
+{
+	struct udevice *dev;
+	struct uclass *uc;
+
+	uclass_id_foreach_dev(UCLASS_HOST, dev, uc) {
+		struct host_sb_plat *plat = dev_get_plat(dev);
+
+		if (plat->label && !strcmp(label, plat->label)) {
+			plat->flags = flags;
+			return 0;
+		}
+	}
+
+	return -ENODEV;
 }
 
 struct udevice *host_get_cur_dev(void)

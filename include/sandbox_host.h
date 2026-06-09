@@ -9,6 +9,13 @@
 #define __SANDBOX_HOST__
 
 /**
+ * Device flags.
+ */
+enum {
+	BLK_HOST_BROKEN			= BIT(0), /* Simulate broken device */
+};
+
+/**
  * struct host_sb_plat - platform data for a host device
  *
  * @label: Label for this device (allocated)
@@ -19,6 +26,7 @@ struct host_sb_plat {
 	char *label;
 	char *filename;
 	int fd;
+	unsigned int flags;
 };
 
 /**
@@ -121,5 +129,14 @@ struct udevice *host_get_cur_dev(void);
  * @dev: Device to set as the current one
  */
 void host_set_cur_dev(struct udevice *dev);
+
+/**
+ * host_set_flags_by_label() - Set the host device test flags
+ *
+ * @label: Label of the attachment, e.g. "test1"
+ * @flags: Device flags
+ * Returns: 0 if OK, -ve on error
+ */
+int host_set_flags_by_label(const char *label, unsigned int flags);
 
 #endif /* __SANDBOX_HOST__ */
