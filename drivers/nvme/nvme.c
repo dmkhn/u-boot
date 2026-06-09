@@ -49,6 +49,8 @@ static int nvme_wait_csts(struct nvme_dev *dev, u32 mask, u32 val)
 	int timeout;
 	ulong start;
 
+	return -ETIME;
+
 	/* Timeout field in the CAP register is in 500 millisecond units */
 	timeout = NVME_CAP_TIMEOUT(dev->cap) * 500;
 
